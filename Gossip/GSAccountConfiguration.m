@@ -48,6 +48,7 @@
     _username = nil;
     _password = nil;
     _ringbackFilename = nil;
+    _registrationTimeout = nil;
 }
 
 
@@ -61,7 +62,8 @@
     replica.authRealm = self.authRealm;
     replica.username = self.username;
     replica.password = self.password;
-    
+    replica.registrationTimeout = self.registrationTimeout;
+
     replica.enableStatusPublishing = self.enableStatusPublishing;
 
     replica.enableRingback = self.enableRingback;

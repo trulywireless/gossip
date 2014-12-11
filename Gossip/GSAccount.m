@@ -13,18 +13,24 @@
 #import "PJSIP.h"
 #import "Util.h"
 
+static pjsip_transport *acc_transport;
 
 @implementation GSAccount {
     GSAccountConfiguration *_config;
+    NSDate *_registrationExpiration;
+    BOOL isChangingIP;
+    int transportReferenceCount;
 }
 
 - (id)init {
     if (self = [super init]) {
         _accountId = PJSUA_INVALID_ID;
         _status = GSAccountStatusOffline;
+        _registrationExpiration = nil;
         _config = nil;
-        
+        isChangingIP = NO;
         _delegate = nil;
+        transportReferenceCount = 0;
         
         NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
         [center addObserver:self
@@ -38,6 +44,11 @@
         [center addObserver:self
                    selector:@selector(registrationStateDidChange:)
                        name:GSSIPRegistrationStateDidChangeNotification
+                     object:[GSDispatch class]];
+        
+        [center addObserver:self
+                   selector:@selector(transportStateDidChange:)
+                       name:GSSIPTransportStateDidChangeNotification
                      object:[GSDispatch class]];
     }
     return self;
@@ -62,6 +73,9 @@
     return _config;
 }
 
+- (NSDate*)registrationExpiration{
+    return _registrationExpiration;
+}
 
 - (BOOL)configure:(GSAccountConfiguration *)configuration {
     _config = [configuration copy];
@@ -92,7 +106,8 @@
     
     accConfig.cred_count = 1;
     accConfig.cred_info[0] = creds;
-
+    accConfig.reg_timeout = [configuration.registrationTimeout intValue];
+    
     // finish
     GSReturnNoIfFails(pjsua_acc_add(&accConfig, PJ_TRUE, &_accountId));    
     return YES;
@@ -138,7 +153,11 @@
         GSCall *call = [GSCall incomingCallWithId:callId toAccount:self];        
         if (![delegate_ respondsToSelector:@selector(account:didReceiveIncomingCall:withMessage:)])
             return; // call is disposed/hungup on dealloc
-        [delegate_ account:self didReceiveIncomingCall:call withMessage:[NSString stringWithUTF8String:data->msg_info.msg_buf]];
+        NSString *msgString = nil;
+        if (data->msg_info.msg_buf) {
+            msgString = [NSString stringWithUTF8String:data->msg_info.msg_buf];
+        }
+        [delegate_ account:self didReceiveIncomingCall:call withMessage:msgString];
         
     });
 }
@@ -158,6 +177,9 @@
 
 - (void)registrationStateDidChange:(NSNotification *)notif {
     pjsua_acc_id accountId = GSNotifGetInt(notif, GSSIPAccountIdKey);
+    pjsua_reg_info * regInfo = GSNotifGetPointer(notif, GSSIPRegInfoKey);
+    struct pjsip_regc_cbparam *rp = regInfo->cbparam;
+
     if (accountId == PJSUA_INVALID_ID || accountId != _accountId)
         return;
     
@@ -173,17 +195,94 @@
         pjsip_status_code code = info.status;
         if (code == 0 || (info.online_status == PJ_FALSE)) {
             accStatus = GSAccountStatusOffline;
+            if (isChangingIP) {
+                isChangingIP = NO;
+                dispatch_after(1, dispatch_get_main_queue(), ^{
+                    [self connect];
+                });
+            }
         } else if (PJSIP_IS_STATUS_IN_CLASS(code, 100) || PJSIP_IS_STATUS_IN_CLASS(code, 300)) {
             accStatus = GSAccountStatusConnecting;
         } else if (PJSIP_IS_STATUS_IN_CLASS(code, 200)) {
             accStatus = GSAccountStatusConnected;
+
         } else {
+            if (code == 408) {
+                [self connect];
+            }
             accStatus = GSAccountStatusInvalid;
         }
     }
     
+    if (rp->code/100 == 2 && rp->expiration > 0 && rp->contact_cnt > 0) {
+        /* Registration success */
+        if (acc_transport) {
+            pjsip_transport_dec_ref(acc_transport);
+            acc_transport = NULL;
+        }
+        /* Save transport instance so that we can close it later when
+         * new IP address is detected.
+         */
+        _registrationExpiration = [NSDate dateWithTimeIntervalSinceNow:rp->expiration];
+        acc_transport = rp->rdata->tp_info.transport;
+        pjsip_transport_add_ref(acc_transport);
+    } else {
+        if (acc_transport) {
+            pjsip_transport_dec_ref(acc_transport);
+            acc_transport = NULL;
+        }
+    }
+    
+    
     __block id self_ = self;
     dispatch_async(dispatch_get_main_queue(), ^{ [self_ setStatus:accStatus]; });
 }
+
+- (BOOL)handleIPChange{
+    
+  
+    if (self.status == GSAccountStatusOffline) {
+        return NO;
+    }
+    
+    
+    pj_status_t status;
+
+    if (acc_transport) {
+        status = pjsip_transport_shutdown(acc_transport);
+        if (status != PJ_SUCCESS){
+            return NO;
+        }
+        pjsip_transport_dec_ref(acc_transport);
+        acc_transport = NULL;
+    }
+    
+    isChangingIP = YES;
+
+    BOOL success = [self disconnect];
+    
+    if (!success){
+        isChangingIP = NO;
+        return NO;
+
+    }
+    
+    return YES;
+    
+}
+
+- (void)transportStateDidChange:(NSNotification *)notif {
+    pjsip_transport_state state = GSNotifGetInt(notif, GSSIPTransportStateKey);
+    pjsip_transport *tp = GSNotifGetPointer(notif, GSSIPTransportKey);
+
+    if (state == PJSIP_TP_STATE_DISCONNECTED && acc_transport == tp) {
+        pjsip_transport_dec_ref(acc_transport);
+        acc_transport = NULL;
+    }
+}
+
+
+
+
 
 @end
