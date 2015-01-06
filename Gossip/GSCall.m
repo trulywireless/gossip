@@ -133,6 +133,16 @@
     return result;
 }
 
+- (void)setRingback:(GSRingback *)ringback{
+    if (ringback == _ringback) {
+        return;
+    }
+    
+    [self willChangeValueForKey:@"ringback"];
+    _ringback = ringback;
+    [self didChangeValueForKey:@"ringback"];
+}
+
 
 - (BOOL)begin {
     // for child overrides only
