@@ -116,7 +116,6 @@ static pjsip_transport *acc_transport;
 
 - (BOOL)connect {
     NSAssert(!!_config, @"GSAccount not configured.");
-
     GSReturnNoIfFails(pjsua_acc_set_registration(_accountId, PJ_TRUE));
     GSReturnNoIfFails(pjsua_acc_set_online_status(_accountId, PJ_TRUE));    
     return YES;
@@ -128,6 +127,15 @@ static pjsip_transport *acc_transport;
     GSReturnNoIfFails(pjsua_acc_set_online_status(_accountId, PJ_FALSE));
     GSReturnNoIfFails(pjsua_acc_set_registration(_accountId, PJ_FALSE));
     return YES;
+}
+
+- (void)startKeepAlive{
+
+    pjsip_endpt_send_raw(pjsua_get_pjsip_endpt(), PJSIP_TRANSPORT_TCP, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+}
+
+-(void)performKeepAlive{
+    pj_thread_sleep(5000);
 }
 
 
