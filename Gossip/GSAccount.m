@@ -130,8 +130,8 @@ static pjsip_transport *acc_transport;
 }
 
 - (void)startKeepAlive{
+    pjsua_acc_set_online_status(_accountId, PJ_TRUE);
 
-    pjsip_endpt_send_raw(pjsua_get_pjsip_endpt(), PJSIP_TRANSPORT_TCP, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 }
 
 -(void)performKeepAlive{
