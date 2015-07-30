@@ -13,7 +13,7 @@
 #import "PJSIP.h"
 #import "Util.h"
 
-static pjsip_transport *acc_transport;
+static pjsip_transport *the_transport;
 
 @implementation GSAccount {
     GSAccountConfiguration *_config;
@@ -172,12 +172,27 @@ static pjsip_transport *acc_transport;
 
 - (void)registrationDidStart:(NSNotification *)notif {
     pjsua_acc_id accountId = GSNotifGetInt(notif, GSSIPAccountIdKey);
-    pj_bool_t renew = GSNotifGetBool(notif, GSSIPRenewKey);
+    pjsua_reg_info * regInfo = GSNotifGetPointer(notif, GSSIPRegInfoKey);
     if (accountId == PJSUA_INVALID_ID || accountId != _accountId)
         return;
     
+    struct pjsip_regc_cbparam *rp = regInfo->cbparam;
+
+    if (rp != NULL && the_transport != rp->rdata->tp_info.transport) {
+        /* Registration success */
+        if (the_transport) {
+            pjsip_transport_dec_ref(the_transport);
+            the_transport = NULL;
+        }
+        /* Save transport instance so that we can close it later when
+         * new IP address is detected.
+         */
+        the_transport = rp->rdata->tp_info.transport;
+        pjsip_transport_add_ref(the_transport);
+    }
+    
     GSAccountStatus accStatus = 0;
-    accStatus = renew ? GSAccountStatusConnecting : GSAccountStatusDisconnecting;
+    accStatus = regInfo->renew ? GSAccountStatusConnecting : GSAccountStatusDisconnecting;
 
     __block id self_ = self;
     dispatch_async(dispatch_get_main_queue(), ^{ [self_ setStatus:accStatus]; });
@@ -221,26 +236,16 @@ static pjsip_transport *acc_transport;
             accStatus = GSAccountStatusInvalid;
         }
     }
+
     
     if (rp->code/100 == 2 && rp->expiration > 0 && rp->contact_cnt > 0) {
-        /* Registration success */
-        if (acc_transport) {
-            pjsip_transport_dec_ref(acc_transport);
-            acc_transport = NULL;
-        }
-        /* Save transport instance so that we can close it later when
-         * new IP address is detected.
-         */
-        _registrationExpiration = [NSDate dateWithTimeIntervalSinceNow:rp->expiration];
-        acc_transport = rp->rdata->tp_info.transport;
-        pjsip_transport_add_ref(acc_transport);
+        /* We already saved the transport instance */
     } else {
-        if (acc_transport) {
-            pjsip_transport_dec_ref(acc_transport);
-            acc_transport = NULL;
+        if (the_transport) {
+            pjsip_transport_dec_ref(the_transport);
+            the_transport = NULL;
         }
     }
-    
     
     __block id self_ = self;
     dispatch_async(dispatch_get_main_queue(), ^{ [self_ setStatus:accStatus]; });
@@ -253,39 +258,32 @@ static pjsip_transport *acc_transport;
         return NO;
     }
     
+    isChangingIP = YES;
     
     pj_status_t status;
 
-    if (acc_transport) {
-        status = pjsip_transport_shutdown(acc_transport);
-        if (status != PJ_SUCCESS){
-            return NO;
-        }
-        pjsip_transport_dec_ref(acc_transport);
-        acc_transport = NULL;
+    if (the_transport) {
+        status = pjsip_transport_shutdown(the_transport);
+        pjsip_transport_dec_ref(the_transport);
+        the_transport = NULL;
     }
     
-    isChangingIP = YES;
 
     BOOL success = [self disconnect];
     
-    if (!success){
-        isChangingIP = NO;
-        return NO;
-
-    }
     
     return YES;
     
 }
 
+
 - (void)transportStateDidChange:(NSNotification *)notif {
     pjsip_transport_state state = GSNotifGetInt(notif, GSSIPTransportStateKey);
     pjsip_transport *tp = GSNotifGetPointer(notif, GSSIPTransportKey);
 
-    if (state == PJSIP_TP_STATE_DISCONNECTED && acc_transport == tp) {
-        pjsip_transport_dec_ref(acc_transport);
-        acc_transport = NULL;
+    if (state == PJSIP_TP_STATE_DISCONNECTED && the_transport == tp) {
+        pjsip_transport_dec_ref(the_transport);
+        the_transport = NULL;
     }
 }
 
