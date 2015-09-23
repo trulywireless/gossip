@@ -88,6 +88,8 @@ echo "$PRE BUILD"
 echo "building for $1. this may take a while, tail -f $1.log to see progress."
 echo ""
 
+export IPHONEOS_DEPLOYMENT_TARGET=7.0
+
 cd "$BASE_DIR"/src
 cp "$BASE_DIR"/config_site.h "$BASE_DIR"/src/pjlib/include/pj
 ARCH="-arch $1" ./configure-iphone 2>&1 > "$BASE_DIR"/$1.log
@@ -105,7 +107,7 @@ echo "$PRE COLLECT"
 cd "$BASE_DIR"
 mkdir -p lib/$1
 
-for x in `find src | grep "\.a$"`; do
+for x in `find src | grep "\.a$" | grep -v "_ios"`; do
   cp -v ./$x ./lib/$1
 done | tee "$BASE_DIR"/collect.log
 }
