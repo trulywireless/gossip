@@ -92,6 +92,7 @@ export IPHONEOS_DEPLOYMENT_TARGET=7.0
 
 cd "$BASE_DIR"/src
 cp "$BASE_DIR"/config_site.h "$BASE_DIR"/src/pjlib/include/pj
+cp "$BASE_DIR"/user.mak "$BASE_DIR"/src
 ARCH="-arch $1" ./configure-iphone 2>&1 > "$BASE_DIR"/$1.log
 
 make dep 2>&1 >> "$BASE_DIR"/$1.log
