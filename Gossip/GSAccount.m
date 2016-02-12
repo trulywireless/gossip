@@ -253,7 +253,6 @@ static pjsip_transport *the_transport;
 
 - (BOOL)handleIPChange{
     
-  
     if (self.status == GSAccountStatusOffline) {
         return NO;
     }
@@ -263,16 +262,12 @@ static pjsip_transport *the_transport;
     pj_status_t status;
 
     if (the_transport) {
-        status = pjsip_transport_shutdown(the_transport);
+        GSReturnNoIfFails(pjsip_transport_shutdown(the_transport));
         pjsip_transport_dec_ref(the_transport);
         the_transport = NULL;
     }
     
-
-    BOOL success = [self disconnect];
-    
-    
-    return YES;
+    return [self disconnect];
     
 }
 
