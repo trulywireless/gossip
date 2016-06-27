@@ -7,24 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1B6ED9401BB3405200CA4E69 /* libg7221codec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED92E1BB3405200CA4E69 /* libg7221codec.a */; settings = {ASSET_TAGS = (); }; };
-		1B6ED9411BB3405200CA4E69 /* libgsmcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED92F1BB3405200CA4E69 /* libgsmcodec.a */; settings = {ASSET_TAGS = (); }; };
-		1B6ED9421BB3405200CA4E69 /* libilbccodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED9301BB3405200CA4E69 /* libilbccodec.a */; settings = {ASSET_TAGS = (); }; };
-		1B6ED9431BB3405200CA4E69 /* libpj.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED9311BB3405200CA4E69 /* libpj.a */; settings = {ASSET_TAGS = (); }; };
-		1B6ED9441BB3405200CA4E69 /* libpjlib-util.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED9321BB3405200CA4E69 /* libpjlib-util.a */; settings = {ASSET_TAGS = (); }; };
-		1B6ED9451BB3405200CA4E69 /* libpjmedia-audiodev.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED9331BB3405200CA4E69 /* libpjmedia-audiodev.a */; settings = {ASSET_TAGS = (); }; };
-		1B6ED9461BB3405200CA4E69 /* libpjmedia-codec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED9341BB3405200CA4E69 /* libpjmedia-codec.a */; settings = {ASSET_TAGS = (); }; };
-		1B6ED9471BB3405200CA4E69 /* libpjmedia-videodev.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED9351BB3405200CA4E69 /* libpjmedia-videodev.a */; settings = {ASSET_TAGS = (); }; };
-		1B6ED9481BB3405200CA4E69 /* libpjmedia.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED9361BB3405200CA4E69 /* libpjmedia.a */; settings = {ASSET_TAGS = (); }; };
-		1B6ED9491BB3405200CA4E69 /* libpjnath.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED9371BB3405200CA4E69 /* libpjnath.a */; settings = {ASSET_TAGS = (); }; };
-		1B6ED94A1BB3405200CA4E69 /* libpjsip-simple.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED9381BB3405200CA4E69 /* libpjsip-simple.a */; settings = {ASSET_TAGS = (); }; };
-		1B6ED94B1BB3405200CA4E69 /* libpjsip-ua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED9391BB3405200CA4E69 /* libpjsip-ua.a */; settings = {ASSET_TAGS = (); }; };
-		1B6ED94C1BB3405200CA4E69 /* libpjsip.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED93A1BB3405200CA4E69 /* libpjsip.a */; settings = {ASSET_TAGS = (); }; };
-		1B6ED94D1BB3405200CA4E69 /* libpjsua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED93B1BB3405200CA4E69 /* libpjsua.a */; settings = {ASSET_TAGS = (); }; };
-		1B6ED94E1BB3405200CA4E69 /* libpjsua2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED93C1BB3405200CA4E69 /* libpjsua2.a */; settings = {ASSET_TAGS = (); }; };
-		1B6ED94F1BB3405200CA4E69 /* libresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED93D1BB3405200CA4E69 /* libresample.a */; settings = {ASSET_TAGS = (); }; };
-		1B6ED9501BB3405200CA4E69 /* libspeex.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED93E1BB3405200CA4E69 /* libspeex.a */; settings = {ASSET_TAGS = (); }; };
-		1B6ED9511BB3405200CA4E69 /* libsrtp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED93F1BB3405200CA4E69 /* libsrtp.a */; settings = {ASSET_TAGS = (); }; };
+		1B6ED9401BB3405200CA4E69 /* libg7221codec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED92E1BB3405200CA4E69 /* libg7221codec.a */; };
+		1B6ED9411BB3405200CA4E69 /* libgsmcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED92F1BB3405200CA4E69 /* libgsmcodec.a */; };
+		1B6ED9421BB3405200CA4E69 /* libilbccodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED9301BB3405200CA4E69 /* libilbccodec.a */; };
+		1B6ED9431BB3405200CA4E69 /* libpj.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED9311BB3405200CA4E69 /* libpj.a */; };
+		1B6ED9441BB3405200CA4E69 /* libpjlib-util.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED9321BB3405200CA4E69 /* libpjlib-util.a */; };
+		1B6ED9451BB3405200CA4E69 /* libpjmedia-audiodev.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED9331BB3405200CA4E69 /* libpjmedia-audiodev.a */; };
+		1B6ED9461BB3405200CA4E69 /* libpjmedia-codec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED9341BB3405200CA4E69 /* libpjmedia-codec.a */; };
+		1B6ED9471BB3405200CA4E69 /* libpjmedia-videodev.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED9351BB3405200CA4E69 /* libpjmedia-videodev.a */; };
+		1B6ED9481BB3405200CA4E69 /* libpjmedia.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED9361BB3405200CA4E69 /* libpjmedia.a */; };
+		1B6ED9491BB3405200CA4E69 /* libpjnath.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED9371BB3405200CA4E69 /* libpjnath.a */; };
+		1B6ED94A1BB3405200CA4E69 /* libpjsip-simple.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED9381BB3405200CA4E69 /* libpjsip-simple.a */; };
+		1B6ED94B1BB3405200CA4E69 /* libpjsip-ua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED9391BB3405200CA4E69 /* libpjsip-ua.a */; };
+		1B6ED94C1BB3405200CA4E69 /* libpjsip.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED93A1BB3405200CA4E69 /* libpjsip.a */; };
+		1B6ED94D1BB3405200CA4E69 /* libpjsua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED93B1BB3405200CA4E69 /* libpjsua.a */; };
+		1B6ED94E1BB3405200CA4E69 /* libpjsua2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED93C1BB3405200CA4E69 /* libpjsua2.a */; };
+		1B6ED94F1BB3405200CA4E69 /* libresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED93D1BB3405200CA4E69 /* libresample.a */; };
+		1B6ED9501BB3405200CA4E69 /* libspeex.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED93E1BB3405200CA4E69 /* libspeex.a */; };
+		1B6ED9511BB3405200CA4E69 /* libsrtp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6ED93F1BB3405200CA4E69 /* libsrtp.a */; };
 		221BED7F15B0310000464679 /* GSECodecsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 221BED7E15B0310000464679 /* GSECodecsViewController.m */; };
 		221BED8315B0338F00464679 /* GSCodecInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 221BED8115B0338F00464679 /* GSCodecInfo.h */; };
 		221BED8415B0338F00464679 /* GSCodecInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 221BED8215B0338F00464679 /* GSCodecInfo.m */; };
@@ -605,6 +605,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_BITCODE = NO;
 				ENABLE_TESTABILITY = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -635,6 +636,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
+				ENABLE_BITCODE = NO;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/pjsip/src/pjlib/include",
